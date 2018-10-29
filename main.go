@@ -1,31 +1,27 @@
 package main
 
-import "github.com/gorilla/mux"
-import "net/http"
-import "log"
-import "encoding/json"
-import "fmt"
-// import "github.com/gorilla/context"
-// import a "github.com/bitly/go-simplejson"
+import (
+    "github.com/gorilla/mux"
+    a "github.com/tommarler/rest_api/model"
+    "fmt"
+    "encoding/json"
+    "log"
+    "net/http"
 
-type Book struct {
-	ID     string `json:id`
-	Title  string `json:title`
-	Author string `json:author`
-	Year   string `json:year`
-}
 
-var books []Book
+)
+
+var books []a.Book
 
 func main() {
 	router := mux.NewRouter()
 
 	books = append(books,
-		Book{ID: "1", Title: "Golang pointers", Author: "Mr. Golang", Year: "2010"},
-		Book{ID: "2", Title: "Goroutines", Author: "Mr. Goroutine", Year: "2011"},
-		Book{ID: "3", Title: "Golang routers", Author: "Mr. Router", Year: "2012"},
-		Book{ID: "4", Title: "Golang concurrency", Author: "Mr. Currency", Year: "2013"},
-		Book{ID: "5", Title: "Golang good parts", Author: "Mr. Good", Year: "2014"})
+		a.Book{ID: "1", Title: "Golang pointers", Author: "Mr. Golang", Year: "2010"},
+		a.Book{ID: "2", Title: "Goroutines", Author: "Mr. Goroutine", Year: "2011"},
+		a.Book{ID: "3", Title: "Golang routers", Author: "Mr. Router", Year: "2012"},
+		a.Book{ID: "4", Title: "Golang concurrency", Author: "Mr. Currency", Year: "2013"},
+		a.Book{ID: "5", Title: "Golang good parts", Author: "Mr. Good", Year: "2014"})
 
 	router.HandleFunc("/books", getBooks).Methods("GET")
 	router.HandleFunc("/books/{id}", getBook).Methods("GET")
@@ -52,7 +48,7 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func addBook(w http.ResponseWriter, r *http.Request) {
-	var book Book
+	var book a.Book
 	_ = json.NewDecoder(r.Body).Decode(&book)
 
 	books = append(books, book)
@@ -60,7 +56,7 @@ func addBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateBook(w http.ResponseWriter, r *http.Request) {
-	var book Book
+	var book a.Book
 	_ = json.NewDecoder(r.Body).Decode(&book)
 
 	for i, item := range books {
@@ -74,7 +70,7 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 
 func removeBook(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	var book Book
+	var book a.Book
 
 	book.ID = params["id"]
 
